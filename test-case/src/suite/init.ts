@@ -28,7 +28,7 @@ export async function init(
   api.initNonce(sudo, sudoNonce.toNumber());
 
   const defaultData = { decimals: 12 } as AssetData;
-  logger.info("Creating assets")
+  logger.info("Creating assets");
   const assets = await Promise.all(
     [...new Array(params.assets)].map(async (item, idx) => {
       const asset = genAsset(idx);
@@ -39,10 +39,9 @@ export async function init(
     })
   );
 
-  const accounts = 
-    [...new Array(params.clients)].map((item, idx) => {
-      return keyring.createKeyringPair(`#${idx}`);
-    });
+  const accounts = [...new Array(params.clients)].map((item, idx) => {
+    return keyring.createKeyringPair(`#${idx}`);
+  });
   logger.info("Minting to accounts");
   for (let i = 0; i < params.clients / 100; ++i) {
     const accountsChunk = accounts.slice(i * 100, (i + 1) * 100);

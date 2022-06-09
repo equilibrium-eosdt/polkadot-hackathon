@@ -41,7 +41,7 @@ export async function iteration(
   keyring: HackathonKeyring,
   accounts: KeyringPair[],
   assets: AssetId[]
-): Promise<{ deltas: [KeyringPair, AssetId, bigint][], isGood: boolean }> {
+): Promise<{ deltas: [KeyringPair, AssetId, bigint][]; isGood: boolean }> {
   let deposits = accounts.flatMap((acc) =>
     assets.map(
       (asset) =>

@@ -13,7 +13,7 @@ const loggerOptions: LoggerOptions = {
       error: console.error,
       fatal: console.error,
     },
-  }
-}
+  },
+};
 
 export const logger = pino(loggerOptions);

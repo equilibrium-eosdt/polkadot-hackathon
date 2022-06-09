@@ -10,14 +10,14 @@ export async function finish(
   balances: [KeyringPair, string, bigint][],
   assets: string[]
 ): Promise<void> {
-  logger.info("Burning balances")
+  logger.info("Burning balances");
   await Promise.all(
     balances.map(async ([acc, asset, amount]) => {
       await api.burn(keyring, acc.address, asset, amount);
     })
   );
 
-  logger.info("Removing assets")
+  logger.info("Removing assets");
   await Promise.all(
     assets.map(async (asset) => {
       await api.removeAsset(keyring, asset);

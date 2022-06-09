@@ -16,7 +16,9 @@ export async function loop(
   params: TestParams
 ): Promise<void> {
   for (;;) {
-    logger.info(`*** Test case is starting for N=${params.clients}, M=${params.assets} ***`);
+    logger.info(
+      `*** Test case is starting for N=${params.clients}, M=${params.assets} ***`
+    );
     const result = await suite(api, keyring, params);
     if (!result) {
       break;
@@ -49,13 +51,27 @@ export async function suite(
   await finish(api, keyring, accounts, balances, assets);
 
   if (bads == 0) {
-    logger.info(`*** Test case finished successefuly for N=${params.clients}, M=${params.assets} ***`);
+    logger.info(
+      `*** Test case finished successefuly for N=${params.clients}, M=${params.assets} ***`
+    );
   } else if (goods > bads) {
-    logger.warn(`*** Test case finished sub-successefuly (${JSON.stringify({goods, bads})}) for N=${params.clients}, M=${params.assets} ***`);
+    logger.warn(
+      `*** Test case finished sub-successefuly (${JSON.stringify({
+        goods,
+        bads,
+      })}) for N=${params.clients}, M=${params.assets} ***`
+    );
   } else if (goods > 0) {
-    logger.warn(`*** Test case finished unsuccessefuly (${JSON.stringify({goods, bads})}) for N=${params.clients}, M=${params.assets} ***`);
+    logger.warn(
+      `*** Test case finished unsuccessefuly (${JSON.stringify({
+        goods,
+        bads,
+      })}) for N=${params.clients}, M=${params.assets} ***`
+    );
   } else {
-    throw new Error(`*** Test case failed for N=${params.clients}, M=${params.assets} ***`);
+    throw new Error(
+      `*** Test case failed for N=${params.clients}, M=${params.assets} ***`
+    );
   }
 
   return true;
