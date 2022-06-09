@@ -1,4 +1,4 @@
 export type TestParams = {
-  n: number;
-  m: number;
+  clients: number;
+  assets: number;
 };

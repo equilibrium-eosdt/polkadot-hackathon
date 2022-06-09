@@ -16,13 +16,13 @@ export class HackathonTestCase extends Command {
   static flags = {
     version: flags.version({ char: "v" }),
     help: flags.help({ char: "h" }),
-    nParam: flags.integer({
+    clients: flags.integer({
       char: "N",
       description: "Initial amount of clients in distribution pallet",
       default: 10,
       required: true,
     }),
-    mParam: flags.integer({
+    assets: flags.integer({
       char: "M",
       description: "Initial amount of assets in oracle pallet",
       default: 20,
@@ -32,7 +32,7 @@ export class HackathonTestCase extends Command {
 
   async run(): Promise<void> {
     const {
-      flags: { nParam, mParam },
+      flags: { clients, assets },
     } = this.parse();
 
     const types = Object.values(definitions).reduce(
@@ -78,7 +78,7 @@ export class HackathonTestCase extends Command {
     let wrappedApi = wrapApi(api);
     const unsub = await updatePrices(wrappedApi);
     try {
-      await loop(wrappedApi, keyring, { n: nParam, m: mParam });
+      await loop(wrappedApi, keyring, { clients, assets });
     } finally {
       unsub();
       await api.disconnect();

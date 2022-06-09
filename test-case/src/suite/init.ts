@@ -30,7 +30,7 @@ export async function init(
   const defaultData = { decimals: 12 } as AssetData;
   logger.info("Creating assets")
   const assets = await Promise.all(
-    [...new Array(params.m)].map(async (item, idx) => {
+    [...new Array(params.assets)].map(async (item, idx) => {
       const asset = genAsset(idx);
       if ((await api.getAsset(asset)) == undefined) {
         await api.createAsset(keyring, asset, defaultData);
@@ -40,11 +40,11 @@ export async function init(
   );
 
   const accounts = 
-    [...new Array(params.n)].map((item, idx) => {
+    [...new Array(params.clients)].map((item, idx) => {
       return keyring.createKeyringPair(`#${idx}`);
     });
   logger.info("Minting to accounts");
-  for (let i = 0; i < params.n / 100; ++i) {
+  for (let i = 0; i < params.clients / 100; ++i) {
     const accountsChunk = accounts.slice(i * 100, (i + 1) * 100);
     await Promise.all(
       accountsChunk.map(async (acc) => {
