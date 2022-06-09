@@ -1,0 +1,61 @@
+[package]
+name = "hack-a-node"
+version = "1.0.0"
+authors = ["Equilibrium Team <https://github.com/equilibrium-eosdt>"]
+homepage = "https://equilibrium.io/"
+edition = "2021"
+build = "build.rs"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+clap = { version = "3.1.18", features = ["derive"] }
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
+
+sc-cli = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", features = ["wasmtime"] }
+sp-core = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-executor = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", features = ["wasmtime"] }
+sc-service = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", features = ["wasmtime"] }
+sc-telemetry = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-keystore = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-transaction-pool = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-transaction-pool-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-consensus-aura = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-consensus-aura = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-consensus = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-consensus = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-finality-grandpa = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-finality-grandpa = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-client-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-timestamp = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-inherents = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-keyring = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+frame-system = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+pallet-transaction-payment = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+
+jsonrpc-core = "18.0.0"
+sc-rpc = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-rpc-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-blockchain = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sp-block-builder = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+sc-basic-authorship = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+substrate-frame-rpc-system = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+pallet-transaction-payment-rpc = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+
+frame-benchmarking = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+frame-benchmarking-cli = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+
+runtime = { package = "hack-a-node-runtime", path = "../runtime", version = "1.0.0" }
+primitives = { path = "../primitives" }
+
+[build-dependencies]
+substrate-build-script-utils = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05" }
+
+[features]
+default = []
+runtime-benchmarks = []
+try-runtime = []

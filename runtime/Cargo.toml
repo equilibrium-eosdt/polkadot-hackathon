@@ -1,0 +1,86 @@
+[package]
+name = "hack-a-node-runtime"
+version = "1.0.0"
+authors = ["Equilibrium Team <https://github.com/equilibrium-eosdt>"]
+homepage = "https://equilibrium.io/"
+edition = "2021"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+
+pallet-aura = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+frame-support = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+pallet-grandpa = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+pallet-randomness-collective-flip = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+pallet-sudo = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+frame-system = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+frame-try-runtime = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", optional = true }
+pallet-timestamp = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+pallet-transaction-payment = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+frame-executive = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-block-builder = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-consensus-aura = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-core = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-inherents = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-offchain = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-session = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-std = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-transaction-pool = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+sp-version = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+
+frame-system-rpc-runtime-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+pallet-transaction-payment-rpc-runtime-api = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+
+frame-benchmarking = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false, optional = true }
+frame-system-benchmarking = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false, optional = true }
+hex-literal = { version = "0.3.4", optional = true }
+
+primitives = { path = "../primitives", default-features = false }
+
+pallet-assets = { path = "../pallets/assets", default-features = false }
+pallet-balances = { path = "../pallets/balances", default-features = false }
+pallet-distribution = { path = "../pallets/distribution", default-features = false }
+pallet-oracle = { path = "../pallets/oracle", default-features = false }
+
+[build-dependencies]
+substrate-wasm-builder = { git = "https://github.com/paritytech/substrate.git", tag = "monthly-2022-05", default-features = false }
+
+[features]
+default = ["std"]
+std = [
+	"codec/std",
+	"scale-info/std",
+	"frame-executive/std",
+	"frame-support/std",
+	"frame-system-rpc-runtime-api/std",
+	"frame-system/std",
+	"pallet-aura/std",
+	"pallet-assets/std",
+	"pallet-balances/std",
+	"pallet-distribution/std",
+	"pallet-oracle/std",
+	"pallet-grandpa/std",
+	"pallet-randomness-collective-flip/std",
+	"pallet-sudo/std",
+	"pallet-timestamp/std",
+	"pallet-transaction-payment-rpc-runtime-api/std",
+	"pallet-transaction-payment/std",
+	"sp-api/std",
+	"sp-block-builder/std",
+	"sp-consensus-aura/std",
+	"sp-core/std",
+	"sp-inherents/std",
+	"sp-offchain/std",
+	"sp-runtime/std",
+	"sp-session/std",
+	"sp-std/std",
+	"sp-transaction-pool/std",
+	"sp-version/std",
+	"primitives/std",
+]
