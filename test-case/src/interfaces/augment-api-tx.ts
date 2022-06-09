@@ -29,7 +29,6 @@ declare module '@polkadot/api-base/types/submittable' {
     distribution: {
       deposit: AugmentedSubmittable<(asset: Bytes | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u128]>;
       issue: AugmentedSubmittable<(asset: Bytes | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u128]>;
-      redistribute: AugmentedSubmittable<(who: AccountId32 | string | Uint8Array, asset: Bytes | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array, block: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, Bytes, u128, u32]>;
       withdraw: AugmentedSubmittable<(asset: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
       /**
        * Generic tx

@@ -618,13 +618,7 @@ export default {
       },
       issue: {
         asset: 'Bytes',
-        amount: 'u128',
-      },
-      redistribute: {
-        who: 'AccountId32',
-        asset: 'Bytes',
-        amount: 'u128',
-        block: 'u32'
+        amount: 'u128'
       }
     }
   },

@@ -622,14 +622,7 @@ declare module '@polkadot/types/lookup' {
       readonly asset: Bytes;
       readonly amount: u128;
     } & Struct;
-    readonly isRedistribute: boolean;
-    readonly asRedistribute: {
-      readonly who: AccountId32;
-      readonly asset: Bytes;
-      readonly amount: u128;
-      readonly block: u32;
-    } & Struct;
-    readonly type: 'Deposit' | 'Withdraw' | 'Issue' | 'Redistribute';
+    readonly type: 'Deposit' | 'Withdraw' | 'Issue';
   }
 
   /** @name PalletSudoError (105) */

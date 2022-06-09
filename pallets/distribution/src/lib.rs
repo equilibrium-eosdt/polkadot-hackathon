@@ -6,11 +6,7 @@ use frame_support::{dispatch::DispatchResultWithPostInfo, ensure, traits::Get};
 use frame_system::{ensure_signed_or_root, offchain::*};
 pub use pallet::*;
 use primitives::{assets::AssetGetter, currency::Currency, prices::PriceGetter};
-use sp_runtime::{
-    offchain::storage::{StorageRetrievalError, StorageValueRef},
-    traits::Zero,
-    DispatchError,
-};
+use sp_runtime::{traits::Zero, DispatchError, DispatchResult};
 use sp_std::collections::btree_map::BTreeMap;
 
 type AssetIdOf<T> = <<T as Config>::Assets as primitives::assets::AssetGetter>::AssetId;
@@ -155,62 +151,13 @@ pub mod pallet {
             Self::deposit_event(Event::<T>::Issued { asset, amount });
             Ok(().into())
         }
-
-        #[pallet::weight(10_000)]
-        pub fn redistribute(
-            origin: OriginFor<T>,
-            who: T::AccountId,
-            asset: AssetIdOf<T>,
-            amount: T::Balance,
-            _block: T::BlockNumber,
-        ) -> DispatchResultWithPostInfo {
-            ensure_none(origin)?;
-            T::Currency::transfer(&T::ModuleId::get(), &who, &asset, amount)?;
-            Self::deposit_event(Event::<T>::Redistributed { who, asset, amount });
-            Ok(().into())
-        }
-    }
-
-    #[pallet::validate_unsigned]
-    impl<T: Config> ValidateUnsigned for Pallet<T> {
-        type Call = Call<T>;
-
-        fn validate_unsigned(source: TransactionSource, call: &Call<T>) -> TransactionValidity {
-            match (source, call) {
-                (
-                    _,
-                    Call::redistribute {
-                        block, who, asset, ..
-                    },
-                ) => {
-                    if *block + T::BlockNumber::from(5u8)
-                        > frame_system::Pallet::<T>::block_number()
-                    {
-                        ValidTransaction::with_tag_prefix("Distribution")
-                            .priority(1)
-                            .and_provides((who, asset))
-                            .longevity(5)
-                            .build()
-                    } else {
-                        Err(TransactionValidityError::Invalid(InvalidTransaction::Stale))
-                    }
-                }
-                _ => Err(TransactionValidityError::Unknown(
-                    UnknownTransaction::NoUnsignedValidator,
-                )),
-            }
-        }
     }
 
     #[pallet::hooks]
     impl<T: Config> Hooks<T::BlockNumber> for Pallet<T> {
-        fn offchain_worker(n: T::BlockNumber) {
-            let _ = Self::acquire_lock(|| {
-                let total_in_stable = Self::total_in_stable();
-                if total_in_stable.is_zero() {
-                    return;
-                }
-
+        fn on_initialize(n: T::BlockNumber) -> Weight {
+            let total_in_stable = Self::total_in_stable();
+            if !total_in_stable.is_zero() {
                 let mut issuances = BTreeMap::<AssetIdOf<T>, _>::new();
                 for (who, asset) in Deposits::<T>::iter_keys() {
                     let deposit_in_stable = Self::deposit_in_stable(&who);
@@ -226,7 +173,7 @@ pub mod pallet {
                     {
                         if !to_redistribute.is_zero() {
                             issuance.1 += to_redistribute;
-                            Self::submit_redistribute(
+                            let _ = Self::inner_redistribute(
                                 who.clone(),
                                 asset.clone(),
                                 to_redistribute,
@@ -241,39 +188,23 @@ pub mod pallet {
                     |(asset, (redistribution, actual_redistribution))| {
                         if actual_redistribution < redistribution {
                             let residue = redistribution - actual_redistribution;
-                            Self::submit_redistribute(treasury.clone(), asset.clone(), residue, n);
+                            let _ = Self::inner_redistribute(
+                                treasury.clone(),
+                                asset.clone(),
+                                residue,
+                                n,
+                            );
                         }
                     },
                 );
-            });
+            }
+
+            0
         }
     }
 }
 
 impl<T: Config> Pallet<T> {
-    pub fn acquire_lock<F>(f: F) -> Result<(), ()>
-    where
-        F: Fn(),
-    {
-        let mut lock_storage = StorageValueRef::persistent(b"offchain-lock");
-
-        let can_process =
-            lock_storage.mutate(|is_locked: Result<Option<bool>, StorageRetrievalError>| {
-                match is_locked {
-                    Ok(Some(true)) => Err(()),
-                    _ => Ok(true),
-                }
-            });
-
-        if let Ok(true) = can_process {
-            f();
-            lock_storage.clear();
-            Ok(())
-        } else {
-            Err(())
-        }
-    }
-
     fn total_in_stable() -> T::Balance {
         TotalDeposits::<T>::iter()
             .filter_map(|(ref asset, amount)| T::Prices::to_stable_amount(asset, amount).ok())
@@ -292,18 +223,14 @@ impl<T: Config> Pallet<T> {
             .map(u128::into)
     }
 
-    fn submit_redistribute(
+    fn inner_redistribute(
         who: T::AccountId,
         asset: AssetIdOf<T>,
         amount: T::Balance,
-        block: T::BlockNumber,
-    ) {
-        let call = Call::<T>::redistribute {
-            who,
-            asset,
-            amount,
-            block,
-        };
-        let _ = SubmitTransaction::<T, Call<T>>::submit_unsigned_transaction(call.into());
+        _block: T::BlockNumber,
+    ) -> DispatchResult {
+        T::Currency::transfer(&T::ModuleId::get(), &who, &asset, amount)?;
+        Self::deposit_event(Event::<T>::Redistributed { who, asset, amount });
+        Ok(())
     }
 }

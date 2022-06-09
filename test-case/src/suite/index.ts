@@ -45,7 +45,11 @@ export async function suite(
       logger.info(`Iteration ${it} finished successefuly`);
       goods++;
     }
-    ({ balances } = await check(api, accounts, assets, balances, deltas));
+    try {
+      ({ balances } = await check(api, accounts, assets, balances, deltas));
+    } catch (err: any) {
+      throw new Error(`*** Test case failed for N=${params.clients}, M=${params.assets} on checking Balances***`);
+    }
   }
 
   await finish(api, keyring, accounts, balances, assets);
